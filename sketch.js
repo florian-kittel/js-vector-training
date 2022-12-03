@@ -18,8 +18,20 @@ function windowResized() {
 
 
 function draw() {
+  let pos = createVector(width / 2, height / 2);
+  let mouse = createVector(mouseX, mouseY);
+
+  let v = p5.Vector.sub(mouse, pos);
+  // v.normalize();
+  
+  // translate(width / 2, height / 2);
+
+  // stroke(255, 50);
+  // strokeWeight(2);
+  // line(0, 0, v.x, v.y);
+
   walker.show();
   walker.update();
 
-  lines.update();
+  lines.update(); 
 }

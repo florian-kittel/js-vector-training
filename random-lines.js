@@ -7,8 +7,8 @@ class RandomLines {
   }
 
   update() {
-    translate(this.x, this.y);
     let v = p5.Vector.random2D();
+    translate(this.x, this.y);
     v.mult(random(50, 100));
 
     stroke(255, 50);
