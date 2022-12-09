@@ -21,6 +21,22 @@ class Mover {
     this.acceleration.add(forceByMass);
   }
 
+  friction() {
+    let differences = height - (this.location.y + this.radius);
+
+    if (differences < 1) {
+      this.velocity.mult(0.95);
+      // let force = this.velocity.copy();
+      // force.normalize();
+      // force.mult(-1);
+
+      // let mu = 0.1;
+      // let normal = this.mass;
+
+      // force.setMag(mu * normal);
+    }
+  }
+
   update() {
     let mouse = createVector(mouseX, mouseY);
 

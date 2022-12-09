@@ -5,11 +5,16 @@ let walker;
 let mover;
 let moverB;
 
+let movers = [];
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(40);
 
-  mover = new Mover(width / 2 + 40, height / 2, 2);
+  for (let i = 0; i < 10; i++) {
+    movers[i] = new Mover(random(width), height / 2, random(1, 8));
+  }
+
   moverB = new Mover(width / 2, height / 2, 4);
   // lines = new RandomLines(width / 2, height / 2);
 }
@@ -41,26 +46,25 @@ function draw() {
   // strokeWeight(4);
   // line(0, 0, v.x, v.y);
 
-  if (mouseIsPressed) {
-    let wind = createVector(0.5, 0);
-    mover.applyForce(wind);
-    moverB.applyForce(wind);
+  for (let mover of movers) {
+
+
+    if (mouseIsPressed) {
+      let wind = createVector(0.5, 0);
+      mover.applyForce(wind);
+    }
+
+    let gravity = createVector(0, 0.1);
+
+    let weigt = p5.Vector.mult(gravity, mover.mass);
+    mover.applyForce(weigt);
+
+    mover.friction();
+
+    mover.show();
+    mover.update();
+    mover.checkEdges();
+
   }
-
-  let gravity = createVector(0, 0.1);
-
-  let weigtA = p5.Vector.mult(gravity, mover.mass);
-  let weigtB = p5.Vector.mult(gravity, moverB.mass);
-  mover.applyForce(weigtA);
-  moverB.applyForce(weigtB);
-
-  mover.show();
-  mover.update();
-  mover.checkEdges();
-
-  moverB.show();
-  moverB.update();
-  moverB.checkEdges();
-
   // lines.update(); 
 }
