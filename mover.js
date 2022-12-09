@@ -1,32 +1,47 @@
 class Mover {
-  pos;
+  location;
   from = -4;
   to = 4;
-  acc;
+  acceleration;
+  velocity;
+  topspeed = 10;
 
   constructor(x, y) {
-    this.pos = createVector(x, y);
-    this.vel = p5.Vector.random2D();
-    this.vel.mult(random(3));
-
+    this.location = createVector(x, y);
+    this.velocity = p5.Vector.random2D();
+    this.velocity.mult(random(3));
   }
 
   update() {
     let mouse = createVector(mouseX, mouseY);
 
-    this.acc = p5.Vector.sub(mouse, this.pos);
-    this.acc.setMag(0.1);
-    this.vel.add(this.acc);
+    this.acceleration = p5.Vector.sub(mouse, this.location);
+    this.acceleration.setMag(0.1);
+    this.velocity.add(this.acceleration);
 
-    this.vel.limit(5);
+    this.velocity.limit(this.topspeed);
 
-    this.pos.add(this.vel);
+    this.location.add(this.velocity);
   }
 
   show() {
     stroke(255, 100);
     strokeWeight(2);
     fill(255, 100);
-    circle(this.pos.x, this.pos.y, 20);
+    circle(this.location.x, this.location.y, 20);
+  }
+
+  checkEdges() {
+    if (this.location.x > width) {
+      this.location.x = 0;
+    } else if (this.location.x < 0) {
+      this.location.x = width;
+    }
+
+    if (this.location.y > height) {
+      this.location.y = 0;
+    } else if (this.location.y < 0) {
+      this.location.y = height;
+    }
   }
 }

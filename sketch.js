@@ -41,6 +41,7 @@ function draw() {
 
   mover.show();
   mover.update();
+  mover.checkEdges();
 
   // lines.update(); 
 }
