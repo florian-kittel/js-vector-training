@@ -3,18 +3,22 @@ class Mover {
   from = -4;
   to = 4;
   acceleration = createVector(0, 0);
-  velocity;
+  velocity = createVector(0, 0);
   topspeed = 10;
   radius = 16;
+  math = 2;
 
-  constructor(x, y) {
+  constructor(x, y, m) {
     this.location = createVector(x, y);
-    this.velocity = p5.Vector.random2D();
-    this.velocity.mult(random(2));
+    // this.velocity = p5.Vector.random2D();
+    // this.velocity.mult(random(2));
+    this.mass = m;
+    this.radius = sqrt(this.mass) * 10;
   }
 
   applyForce(force) {
-    this.acceleration.add(force);
+    let forceByMass = p5.Vector.div(force, this.mass);
+    this.acceleration.add(forceByMass);
   }
 
   update() {

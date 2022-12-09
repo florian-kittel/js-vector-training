@@ -3,12 +3,14 @@ let x;
 let y;
 let walker;
 let mover;
+let moverB;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   background(40);
 
-  mover = new Mover(width / 2, height / 2);
+  mover = new Mover(width / 2 + 40, height / 2, 2);
+  moverB = new Mover(width / 2, height / 2, 4);
   // lines = new RandomLines(width / 2, height / 2);
 }
 
@@ -42,14 +44,23 @@ function draw() {
   if (mouseIsPressed) {
     let wind = createVector(0.5, 0);
     mover.applyForce(wind);
+    moverB.applyForce(wind);
   }
 
   let gravity = createVector(0, 0.1);
-  mover.applyForce(gravity);
+
+  let weigtA = p5.Vector.mult(gravity, mover.mass);
+  let weigtB = p5.Vector.mult(gravity, moverB.mass);
+  mover.applyForce(weigtA);
+  moverB.applyForce(weigtB);
 
   mover.show();
   mover.update();
   mover.checkEdges();
+
+  moverB.show();
+  moverB.update();
+  moverB.checkEdges();
 
   // lines.update(); 
 }
