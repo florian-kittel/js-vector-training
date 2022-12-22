@@ -1,22 +1,9 @@
-let pos;
-let x;
-let y;
-let walker;
-let mover;
-let moverB;
-
-let movers = [];
+let vehicle;
+let target;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  background(40);
-
-  for (let i = 0; i < 10; i++) {
-    movers[i] = new Mover(random(width), height / 2, random(1, 8));
-  }
-
-  moverB = new Mover(width / 2, height / 2, 4);
-  // lines = new RandomLines(width / 2, height / 2);
+  vehicle = new Vehicle(100, 100);
 }
 
 
@@ -27,44 +14,15 @@ function windowResized() {
 
 function draw() {
   background(40);
-
-  // let pos = createVector(width / 2, height / 2);
-  // let mouse = createVector(mouseX, mouseY);
-
-  // let v = p5.Vector.sub(mouse, pos);
-
-  // let m = v.mag();
-  // v.div(m);
-  // v.normalize().mult(50);
-  // v.mult(50);
-  // console.log(m); 
-  // background(m);
-  // v.setMag(50);
-
-  // translate(width / 2, height / 2); 
-  // stroke(200);
-  // strokeWeight(4);
-  // line(0, 0, v.x, v.y);
-
-  for (let mover of movers) {
+  fill(255, 0, 0);
+  noStroke();
+  
+  target = createVector(mouseX, mouseY);
+  circle(target.x, target.y, 32);
 
 
-    if (mouseIsPressed) {
-      let wind = createVector(0.5, 0);
-      mover.applyForce(wind);
-    }
+  vehicle.seek(target);
+  vehicle.update();
+  vehicle.show();
 
-    let gravity = createVector(0, 0.1);
-
-    let weigt = p5.Vector.mult(gravity, mover.mass);
-    mover.applyForce(weigt);
-
-    mover.friction();
-
-    mover.show();
-    mover.update();
-    mover.checkEdges();
-
-  }
-  // lines.update(); 
 }
