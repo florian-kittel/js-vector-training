@@ -17,14 +17,30 @@ class Vehicle {
 
 
   pursue(vehicle) {
+    const targetRadius = 16;
+
     let target = vehicle.position.copy();
     let prediction = vehicle.velocity.copy();
 
     prediction.mult(20);
     target.add(prediction);
 
-    fill(0, 255, 0);
-    circle(target.x, target.y, 16);
+    if (target.x > width - targetRadius) {
+      target.x = width - targetRadius + prediction.x * -1;
+    } else if (target.x < targetRadius) {
+      target.x = targetRadius + prediction.x * -1;
+    }
+
+    if (target.y >= height - targetRadius) {
+      target.y = height - targetRadius + prediction.y * -1;
+    } else if (target.y < targetRadius) {
+      target.y = targetRadius + prediction.y * -1;
+    }
+    // target.add(prediction);
+
+
+    // fill(0, 255, 0);
+    // circle(target.x, target.y, targetRadius);
 
     return this.seek(target);
   }
@@ -94,15 +110,16 @@ class Vehicle {
 class Target extends Vehicle {
   constructor(x, y) {
     super(x, y);
-    this.velocity = createVector(5, 6);
+    this.velocity = createVector(random(-4, 4), random(-4, 4));
 
-    this.maxSpeed = 3;
+    this.maxSpeed = 2;
+    this.fill = '#F063A475';
   }
 
   show() {
     stroke(255, 100);
     strokeWeight(2);
-    fill('#F063A475');
+    fill(this.fill);
     push();
 
     translate(this.position.x, this.position.y);
