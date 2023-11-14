@@ -1,5 +1,12 @@
-
+/**
+ * The Vehicle class represents an object that moves in a 2D space.
+ */
 class Vehicle {
+  /**
+   * Creates a new Vehicle object.
+   * @param {number} x - The x-coordinate of the Vehicle's starting position.
+   * @param {number} y - The y-coordinate of the Vehicle's starting position.
+   */
   constructor(x, y) {
     this.position = createVector(x, y);
     this.velocity = createVector(0, 0);
@@ -10,12 +17,19 @@ class Vehicle {
     this.radius = 16;
   }
 
-
+  /**
+   * Applies a force to the Vehicle, changing its acceleration.
+   * @param {p5.Vector} force - The force to apply.
+   */
   applyForce(force) {
     this.acceleration.add(force);
   }
 
-
+  /**
+   * Makes the Vehicle pursue another Vehicle.
+   * @param {Vehicle} vehicle - The Vehicle to pursue.
+   * @returns {p5.Vector} The force needed to move towards the target.
+   */
   pursue(vehicle) {
     const targetRadius = 16;
 
@@ -45,18 +59,31 @@ class Vehicle {
     return this.seek(target);
   }
 
-
+  /**
+   * Makes the Vehicle evade another Vehicle.
+   * @param {Vehicle} vehicle - The Vehicle to evade.
+   * @returns {p5.Vector} The force needed to move away from the target.
+   */
   evade(vehicle) {
     let pursuit = this.pursue(vehicle);
     pursuit.mult(-1);
     return pursuit;
   }
 
-
+  /**
+   * Makes the Vehicle flee from a target.
+   * @param {p5.Vector} target - The target to flee from.
+   * @returns {p5.Vector} The force needed to move away from the target.
+   */
   flee(target) {
     return this.seek(target).mult(-1);
   }
 
+  /**
+   * Makes the Vehicle seek a target.
+   * @param {p5.Vector} target - The target to seek.
+   * @returns {p5.Vector} The force needed to move towards the target.
+   */
   seek(target) {
     let force = p5.Vector.sub(target, this.position);
     force.setMag(this.maxSpeed);
@@ -66,7 +93,9 @@ class Vehicle {
     return force;
   }
 
-
+  /**
+   * Updates the Vehicle's position and velocity.
+   */
   update() {
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.maxSpeed);
@@ -74,7 +103,9 @@ class Vehicle {
     this.acceleration.set(0, 0);
   }
 
-
+  /**
+   * Displays the Vehicle on the 2D surface.
+   */
   show() {
     stroke(255, 100);
     strokeWeight(2);
@@ -88,6 +119,9 @@ class Vehicle {
     pop();
   }
 
+  /**
+   * Checks if the Vehicle has hit the edge of the canvas and reverses direction if it has.
+   */
   checkEdges() {
     if (this.position.x > width - this.radius) {
       this.position.x = width - this.radius;
@@ -107,7 +141,15 @@ class Vehicle {
   }
 }
 
+/**
+ * The Target class represents a target that the Vehicle can pursue or evade.
+ */
 class Target extends Vehicle {
+  /**
+   * Creates a new Target object.
+   * @param {number} x - The x-coordinate of the Target's position.
+   * @param {number} y - The y-coordinate of the Target's position.
+   */
   constructor(x, y) {
     super(x, y);
     this.velocity = createVector(random(-4, 4), random(-4, 4));
@@ -116,6 +158,9 @@ class Target extends Vehicle {
     this.fill = '#F063A475';
   }
 
+  /**
+   * Displays the Target on the 2D surface.
+   */
   show() {
     stroke(255, 100);
     strokeWeight(2);
