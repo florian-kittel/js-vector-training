@@ -1,58 +1,100 @@
+/**
+ * The pursuer, primaryTarget, and secondaryTarget are global variables that will hold instances of the Vehicle and Target classes.
+ */
 let pursuer;
-let target;
-let target2;
+let primaryTarget;
+let secondaryTarget;
 
+/**
+ * The setup function is a p5.js function that is called once when the program starts. It's used to define initial environment properties.
+ */
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  pursuer = new Vehicle(windowWidth / 2, windowHeight / 2);
-  target = new Target(random(width), random(height));
-  target2 = new Target(random(width), random(height));
-
-  target2.maxSpeed = 4;
-  target2.fill = '#CCCCCC75';
+  initializeEntities();
 }
 
+/**
+ * The initializeEntities function is used to initialize the pursuer, primaryTarget, and secondaryTarget with their initial properties.
+ */
+function initializeEntities() {
+  pursuer = new Vehicle(windowWidth / 2, windowHeight / 2);
+  primaryTarget = new Target(random(width), random(height));
+  secondaryTarget = new Target(random(width), random(height));
 
+  secondaryTarget.maxSpeed = 4;
+  secondaryTarget.fill = '#CCCCCC75';
+}
+
+/**
+ * The windowResized function is a p5.js function that is called every time the browser window is resized.
+ */
 function windowResized() {
   resizeCanvas(windowWidth, windowHeight);
 }
 
-
+/**
+ * The draw function is a p5.js function that is called continuously. It's used to execute the code inside continuously.
+ */
 function draw() {
   background(40);
   fill(255, 0, 0);
 
-  const steering = pursuer.pursue(target);
+  pursuePrimaryTarget();
+  evadeSecondaryTarget();
+  fleeFromPursuer();
+
+  updateAndDisplayEntities();
+}
+
+/**
+ * The pursuePrimaryTarget function is used to make the pursuer pursue the primary target.
+ */
+function pursuePrimaryTarget() {
+  const steering = pursuer.pursue(primaryTarget);
   pursuer.applyForce(steering);
 
-  // Evade to collide with Target2 during pursuit Target
-  let distanceToTarget2 = p5.Vector.dist(pursuer.position, target2.position);
-  if (distanceToTarget2 < (pursuer.radius + target2.radius) * 10) {
-    const steering2 = pursuer.evade(target2);
-    pursuer.applyForce(steering2);
+  let distanceToPrimaryTarget = p5.Vector.dist(pursuer.position, primaryTarget.position);
+  if (distanceToPrimaryTarget < pursuer.radius + primaryTarget.radius) {
+    primaryTarget = new Target(random(width), random(height));
   }
+}
 
-  let distance = p5.Vector.dist(pursuer.position, target.position);
-  if (distance < pursuer.radius + target.radius) {
-    target = new Target(random(width), random(height));
+/**
+ * The evadeSecondaryTarget function is used to make the pursuer evade the secondary target.
+ */
+function evadeSecondaryTarget() {
+  let distanceToSecondaryTarget = p5.Vector.dist(pursuer.position, secondaryTarget.position);
+  if (distanceToSecondaryTarget < (pursuer.radius + secondaryTarget.radius) * 10) {
+    const steering = pursuer.evade(secondaryTarget);
+    pursuer.applyForce(steering);
   }
+}
 
-  if (distance < (pursuer.radius + target.radius) * 15) {
-    const steeringTarget = target.flee(pursuer.position);
-    target.applyForce(steeringTarget);
-    target.maxSpeed = 4;
+/**
+ * The fleeFromPursuer function is used to make the primary target flee from the pursuer.
+ */
+function fleeFromPursuer() {
+  let distance = p5.Vector.dist(primaryTarget.position, pursuer.position);
+  if (distance < (pursuer.radius + primaryTarget.radius) * 15) {
+    const steering = primaryTarget.flee(pursuer.position);
+    primaryTarget.applyForce(steering);
+    primaryTarget.maxSpeed = 4;
   }
+}
 
+/**
+ * Updates and displays the entities.
+ */
+function updateAndDisplayEntities() {
   pursuer.checkEdges();
   pursuer.update();
   pursuer.show();
 
-  target.checkEdges();
-  target.update();
-  target.show();
+  primaryTarget.checkEdges();
+  primaryTarget.update();
+  primaryTarget.show();
 
-  target2.checkEdges();
-  target2.update();
-  target2.show();
-
+  secondaryTarget.checkEdges();
+  secondaryTarget.update();
+  secondaryTarget.show();
 }
